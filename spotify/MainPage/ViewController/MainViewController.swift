@@ -12,6 +12,16 @@ class MainViewController: UIViewController {
     var viewModel: MainViewModel?
     
     //MARK: UI Components
+    private var scrollView: UIScrollView = {
+        let scroll = UIScrollView()
+        scroll.showsVerticalScrollIndicator = false
+        scroll.showsHorizontalScrollIndicator = false
+        scroll.contentInset = .zero
+        return scroll
+    }()
+    
+    private var contentView = UIView()
+    
     private let albumsLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 15)
@@ -92,11 +102,23 @@ class MainViewController: UIViewController {
     
     //MARK: Methods
     private func setupViews(){
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        scrollView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.bottom.equalToSuperview()
+        }
+        contentView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.width.equalTo(view.frame.width)
+            make.centerX.equalTo(view.snp.centerX)
+        }
         [albumsLabel, recommendedLabel, recommendedTableView, newAlbumsCollectionView, playlistLabel, playlistsCollectionView].forEach {
-            view.addSubview($0)
+            contentView.addSubview($0)
         }
         albumsLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).inset(14)
+            make.top.equalToSuperview().inset(14)
             make.left.right.equalToSuperview().inset(16)
         }
         newAlbumsCollectionView.snp.makeConstraints { make in
@@ -119,6 +141,7 @@ class MainViewController: UIViewController {
         }
         recommendedTableView.snp.makeConstraints { make in
             make.top.equalTo(recommendedLabel.snp.bottom).offset(8)
+            make.height.greaterThanOrEqualTo(viewModel?.numberOfCellsTableView ?? 3 * 64)
             make.left.right.bottom.equalToSuperview()
         }
     }
@@ -138,6 +161,11 @@ class MainViewController: UIViewController {
     
     private func createNavBar(){
         navigationController?.navigationBar.tintColor = .white
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBarAppearance.backgroundColor = .black
+        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
+        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
+        navigationController?.navigationBar.compactAppearance = navigationBarAppearance
         let label = UILabel()
         label.text = "Home"
         label.font = UIFont.systemFont(ofSize: 30, weight: .bold)

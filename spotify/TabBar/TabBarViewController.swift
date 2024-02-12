@@ -31,6 +31,11 @@ class TabBarViewController: UITabBarController {
     
     //MARK: Methods
     private func makeTabBarViews(){
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.configureWithOpaqueBackground()
+        tabBarAppearance.backgroundColor = .black
+        tabBar.standardAppearance = tabBarAppearance
+        tabBar.scrollEdgeAppearance = tabBarAppearance
         view.backgroundColor = .black
         tabBar.tintColor = .white
         tabBar.backgroundColor = .black
