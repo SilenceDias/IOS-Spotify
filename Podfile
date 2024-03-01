@@ -7,6 +7,7 @@ target 'spotify' do
 
   # Pods for spotify
   pod 'SnapKit', '~> 5.0.0'
+  pod 'Moya', '~> 15.0'
 
  post_install do |installer|
     installer.pods_project.build_configurations.each do |config|

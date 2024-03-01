@@ -15,9 +15,38 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        let tabBarController = TabBarViewController()
-        window?.rootViewController = tabBarController
+        
+        if AuthManager.shared.isSignedIn {
+            let tabBarController = TabBarViewController()
+            window?.rootViewController = tabBarController
+        }
+        else {
+            let welcomeController = WelcomeViewController()
+            let navigationController = UINavigationController(rootViewController: welcomeController)
+            navigationController.navigationBar.prefersLargeTitles = true
+            navigationController.viewControllers.first?.navigationItem.largeTitleDisplayMode = .always
+            window?.rootViewController = navigationController
+        }
         window?.makeKeyAndVisible()
+        
+        let refreshToken = UserDefaults.standard.string(forKey: "refreshToken") ?? ""
+        
+        AuthManager.shared.refreshAccessToken(token: refreshToken) { [weak self] result in
+            switch result {
+            case .success:
+                DispatchQueue.main.async {
+                    let alert = UIAlertController(title: "Token", message: "Token has been refreshed", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .cancel))
+                    self?.window?.rootViewController?.present(alert, animated: true, completion: nil)
+                }
+            case .failure:
+                DispatchQueue.main.async {
+                    let alert = UIAlertController(title: "Token", message: "Error refreshing the token", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .cancel))
+                    self?.window?.rootViewController?.present(alert, animated: true, completion: nil)
+                }
+            }
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

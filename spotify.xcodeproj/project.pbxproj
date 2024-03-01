@@ -10,7 +10,6 @@
 		D9B661ADE2626B5DB9678118 /* Pods_spotify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 42BDC10A8D78807388735DEB /* Pods_spotify.framework */; };
 		E89BD8442B77A5A600424671 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BD8432B77A5A600424671 /* AppDelegate.swift */; };
 		E89BD8462B77A5A600424671 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BD8452B77A5A600424671 /* SceneDelegate.swift */; };
-		E89BD8482B77A5A600424671 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BD8472B77A5A600424671 /* ViewController.swift */; };
 		E89BD84D2B77A5A800424671 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E89BD84C2B77A5A800424671 /* Assets.xcassets */; };
 		E89BD8502B77A5A800424671 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E89BD84E2B77A5A800424671 /* LaunchScreen.storyboard */; };
 		E89BD85C2B77A8B400424671 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BD85B2B77A8B400424671 /* MainViewController.swift */; };
@@ -22,6 +21,17 @@
 		E89BD8692B7A562700424671 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BD8682B7A562700424671 /* TabBarViewController.swift */; };
 		E89BD86E2B7A57B500424671 /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BD86D2B7A57B500424671 /* LibraryViewController.swift */; };
 		E89BD8712B7A57ED00424671 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BD8702B7A57ED00424671 /* SearchViewController.swift */; };
+		E89BD87C2B80995E00424671 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BD87B2B80995E00424671 /* AuthViewController.swift */; };
+		E89BD87F2B80997B00424671 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BD87E2B80997B00424671 /* WelcomeViewController.swift */; };
+		E89BD8812B8099A900424671 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BD8802B8099A800424671 /* AuthManager.swift */; };
+		E89BD8862B8788D600424671 /* AuthResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BD8852B8788D600424671 /* AuthResponse.swift */; };
+		E89BD88A2B878DE500424671 /* AuthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BD8892B878DE500424671 /* AuthViewModel.swift */; };
+		E89BD88E2B87968700424671 /* AuthTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BD88D2B87968700424671 /* AuthTarget.swift */; };
+		E89BD8982B89D1F900424671 /* GlobalConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BD8972B89D1F900424671 /* GlobalConstants.swift */; };
+		E89BD89A2B89DAF700424671 /* NetworkLoggerPluginConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BD8992B89DAF700424671 /* NetworkLoggerPluginConfig.swift */; };
+		E89BD89C2B89DF0700424671 /* LoggerPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BD89B2B89DF0700424671 /* LoggerPlugin.swift */; };
+		E89BD89F2B89E16900424671 /* APIResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BD89E2B89E16900424671 /* APIResult.swift */; };
+		E89BD8A12B8E056700424671 /* RefreshTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = E89BD8A02B8E056700424671 /* RefreshTarget.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,7 +41,6 @@
 		E89BD8402B77A5A600424671 /* spotify.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = spotify.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E89BD8432B77A5A600424671 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E89BD8452B77A5A600424671 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		E89BD8472B77A5A600424671 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		E89BD84C2B77A5A800424671 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E89BD84F2B77A5A800424671 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E89BD8512B77A5A800424671 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -44,6 +53,17 @@
 		E89BD8682B7A562700424671 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		E89BD86D2B7A57B500424671 /* LibraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
 		E89BD8702B7A57ED00424671 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		E89BD87B2B80995E00424671 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
+		E89BD87E2B80997B00424671 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
+		E89BD8802B8099A800424671 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		E89BD8852B8788D600424671 /* AuthResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthResponse.swift; sourceTree = "<group>"; };
+		E89BD8892B878DE500424671 /* AuthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewModel.swift; sourceTree = "<group>"; };
+		E89BD88D2B87968700424671 /* AuthTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthTarget.swift; sourceTree = "<group>"; };
+		E89BD8972B89D1F900424671 /* GlobalConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalConstants.swift; sourceTree = "<group>"; };
+		E89BD8992B89DAF700424671 /* NetworkLoggerPluginConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkLoggerPluginConfig.swift; sourceTree = "<group>"; };
+		E89BD89B2B89DF0700424671 /* LoggerPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerPlugin.swift; sourceTree = "<group>"; };
+		E89BD89E2B89E16900424671 /* APIResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIResult.swift; sourceTree = "<group>"; };
+		E89BD8A02B8E056700424671 /* RefreshTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTarget.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,14 +116,9 @@
 		E89BD8422B77A5A600424671 /* spotify */ = {
 			isa = PBXGroup;
 			children = (
-				E89BD86B2B7A578800424671 /* LibraryPage */,
-				E89BD86A2B7A578000424671 /* SearchPage */,
-				E89BD8672B7A560600424671 /* TabBar */,
-				E89BD8572B77A87A00424671 /* MainPage */,
-				E89BD8432B77A5A600424671 /* AppDelegate.swift */,
-				E89BD8452B77A5A600424671 /* SceneDelegate.swift */,
-				E89BD8472B77A5A600424671 /* ViewController.swift */,
-				E89BD84C2B77A5A800424671 /* Assets.xcassets */,
+				E89BD8822B87887400424671 /* Core */,
+				E89BD8752B7E5ABC00424671 /* Modules */,
+				E89BD8742B7E5A9100424671 /* Resources */,
 				E89BD84E2B77A5A800424671 /* LaunchScreen.storyboard */,
 				E89BD8512B77A5A800424671 /* Info.plist */,
 			);
@@ -185,6 +200,150 @@
 				E89BD8702B7A57ED00424671 /* SearchViewController.swift */,
 			);
 			path = ViewContoller;
+			sourceTree = "<group>";
+		};
+		E89BD8742B7E5A9100424671 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E89BD8432B77A5A600424671 /* AppDelegate.swift */,
+				E89BD8452B77A5A600424671 /* SceneDelegate.swift */,
+				E89BD84C2B77A5A800424671 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		E89BD8752B7E5ABC00424671 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				E89BD87D2B80996E00424671 /* Welcome */,
+				E89BD8792B80994100424671 /* Auth */,
+				E89BD8672B7A560600424671 /* TabBar */,
+				E89BD8572B77A87A00424671 /* MainPage */,
+				E89BD86A2B7A578000424671 /* SearchPage */,
+				E89BD86B2B7A578800424671 /* LibraryPage */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		E89BD8762B7E5AD700424671 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				E89BD89D2B89E15400424671 /* ApiResult */,
+				E89BD8782B7E5AF400424671 /* AuthManager */,
+				E89BD8772B7E5AE600424671 /* NetworkManager */,
+			);
+			name = Managers;
+			path = ../Managers;
+			sourceTree = "<group>";
+		};
+		E89BD8772B7E5AE600424671 /* NetworkManager */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = NetworkManager;
+			sourceTree = "<group>";
+		};
+		E89BD8782B7E5AF400424671 /* AuthManager */ = {
+			isa = PBXGroup;
+			children = (
+				E89BD8802B8099A800424671 /* AuthManager.swift */,
+			);
+			path = AuthManager;
+			sourceTree = "<group>";
+		};
+		E89BD8792B80994100424671 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				E89BD8882B878DD900424671 /* ViewModel */,
+				E89BD8872B878DCF00424671 /* View */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		E89BD87D2B80996E00424671 /* Welcome */ = {
+			isa = PBXGroup;
+			children = (
+				E89BD87E2B80997B00424671 /* WelcomeViewController.swift */,
+			);
+			path = Welcome;
+			sourceTree = "<group>";
+		};
+		E89BD8822B87887400424671 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				E89BD88C2B87966500424671 /* Plugins */,
+				E89BD88B2B87965C00424671 /* Targets */,
+				E89BD8832B87888600424671 /* Data */,
+				E89BD8762B7E5AD700424671 /* Managers */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		E89BD8832B87888600424671 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				E89BD8962B89D1DF00424671 /* GlobalData */,
+				E89BD8842B8788C400424671 /* Models */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		E89BD8842B8788C400424671 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E89BD8852B8788D600424671 /* AuthResponse.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E89BD8872B878DCF00424671 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				E89BD87B2B80995E00424671 /* AuthViewController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		E89BD8882B878DD900424671 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				E89BD8892B878DE500424671 /* AuthViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		E89BD88B2B87965C00424671 /* Targets */ = {
+			isa = PBXGroup;
+			children = (
+				E89BD88D2B87968700424671 /* AuthTarget.swift */,
+				E89BD8A02B8E056700424671 /* RefreshTarget.swift */,
+			);
+			path = Targets;
+			sourceTree = "<group>";
+		};
+		E89BD88C2B87966500424671 /* Plugins */ = {
+			isa = PBXGroup;
+			children = (
+				E89BD8992B89DAF700424671 /* NetworkLoggerPluginConfig.swift */,
+				E89BD89B2B89DF0700424671 /* LoggerPlugin.swift */,
+			);
+			path = Plugins;
+			sourceTree = "<group>";
+		};
+		E89BD8962B89D1DF00424671 /* GlobalData */ = {
+			isa = PBXGroup;
+			children = (
+				E89BD8972B89D1F900424671 /* GlobalConstants.swift */,
+			);
+			path = GlobalData;
+			sourceTree = "<group>";
+		};
+		E89BD89D2B89E15400424671 /* ApiResult */ = {
+			isa = PBXGroup;
+			children = (
+				E89BD89E2B89E16900424671 /* APIResult.swift */,
+			);
+			path = ApiResult;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -302,16 +461,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				E89BD8642B7A437200424671 /* PlaylistsCollectionViewCell.swift in Sources */,
+				E89BD8812B8099A900424671 /* AuthManager.swift in Sources */,
+				E89BD8A12B8E056700424671 /* RefreshTarget.swift in Sources */,
+				E89BD89A2B89DAF700424671 /* NetworkLoggerPluginConfig.swift in Sources */,
+				E89BD88E2B87968700424671 /* AuthTarget.swift in Sources */,
+				E89BD89C2B89DF0700424671 /* LoggerPlugin.swift in Sources */,
 				E89BD86E2B7A57B500424671 /* LibraryViewController.swift in Sources */,
 				E89BD8622B77B5CF00424671 /* MainViewModel.swift in Sources */,
-				E89BD8482B77A5A600424671 /* ViewController.swift in Sources */,
 				E89BD85E2B77A94D00424671 /* RecommendedMusicDataModel.swift in Sources */,
+				E89BD87C2B80995E00424671 /* AuthViewController.swift in Sources */,
 				E89BD8662B7A477F00424671 /* AlbumsDataModel.swift in Sources */,
+				E89BD87F2B80997B00424671 /* WelcomeViewController.swift in Sources */,
 				E89BD8712B7A57ED00424671 /* SearchViewController.swift in Sources */,
+				E89BD89F2B89E16900424671 /* APIResult.swift in Sources */,
+				E89BD8982B89D1F900424671 /* GlobalConstants.swift in Sources */,
 				E89BD8442B77A5A600424671 /* AppDelegate.swift in Sources */,
 				E89BD8462B77A5A600424671 /* SceneDelegate.swift in Sources */,
 				E89BD85C2B77A8B400424671 /* MainViewController.swift in Sources */,
+				E89BD88A2B878DE500424671 /* AuthViewModel.swift in Sources */,
 				E89BD8692B7A562700424671 /* TabBarViewController.swift in Sources */,
+				E89BD8862B8788D600424671 /* AuthResponse.swift in Sources */,
 				E89BD8602B77AA2B00424671 /* RecommendedMusicTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
