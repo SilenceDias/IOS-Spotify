@@ -7,6 +7,7 @@
 
 import Foundation
 import Moya
+import SwiftKeychainWrapper
 
 final class AuthManager {
     static let shared = AuthManager()
@@ -17,6 +18,9 @@ final class AuthManager {
             LoggerPlugin()
         ]
     )
+    
+    var refreshingToken = false
+    var onRefreshBlocks = [(String) -> Void]()
     
     public var signInUrl: URL? {
         let baseURL = GlobalConstants.baseURL + "/authorize"
@@ -42,11 +46,11 @@ final class AuthManager {
     private init() {}
     
     private var accessToken: String? {
-        return UserDefaults.standard.string(forKey: "accessToken")
+        return KeychainWrapper.standard.string(forKey: "accessToken")
     }
     
     private var refreshToken: String? {
-        return UserDefaults.standard.string(forKey: "refreshToken")
+        return KeychainWrapper.standard.string(forKey: "refreshToken")
     }
     
     private var tokenExpirasionDate: Date? {
@@ -78,32 +82,66 @@ final class AuthManager {
         
     }
     
-    public func refreshAccessToken(token: String, completion: @escaping (APIResult<Void>) -> ()){
-        guard shouldRefreshToken else { return }
+    public func withValidToken(completion: @escaping (String) -> Void) {
+        guard !refreshingToken else {
+            onRefreshBlocks.append(completion)
+            return
+        }
         
-        provider.request(.refresh(refreshToken: token)) {[weak self] result in
+        if shouldRefreshToken {
+            refreshAccessToken { [weak self] success in
+                if success, let accessToken = self?.accessToken {
+                    completion(accessToken)
+                }
+            }
+        } else {
+            guard let accessToken else { return }
+            completion(accessToken)
+        }
+    }
+    
+    public func refreshAccessToken(completion: ((Bool) -> Void)? = nil) {
+        guard !refreshingToken else {
+            return
+        }
+        
+        guard shouldRefreshToken else {
+            completion?(true)
+            return
+        }
+        refreshingToken = true
+        
+        guard let refreshToken else { return }
+        provider.request(.refresh(refreshToken: refreshToken)) { [weak self] result in
+            self?.refreshingToken = false
+            
             switch result {
             case .success(let response):
-                print("TOKEN REFRESHING")
-                guard let result = try? response.map(AuthResponse.self) else {
-                    completion(.failure(.incorrectJson))
-                    return
+                do {
+                    let result = try JSONDecoder().decode(AuthResponse.self, from: response.data)
+                    print("Successfully refreshed")
+                    self?.onRefreshBlocks.forEach { $0(result.accessToken) }
+                    self?.onRefreshBlocks.removeAll()
+                    self?.cacheToken(result: result)
+                    completion?(true)
+                } catch {
+                    print(error.localizedDescription)
+                    completion?(false)
                 }
-                self?.cacheToken(result: result)
-                completion(.success(()))
             case .failure(let error):
-                completion(.failure(.failedWith(error: error.localizedDescription)))
+                print(error.localizedDescription)
+                completion?(false)
             }
         }
     }
     
     private func cacheToken(result: AuthResponse){
-        UserDefaults.standard.setValue(result.accessToken, forKey: "accessToken")
+        KeychainWrapper.standard.set(result.accessToken, forKey: "accessToken")
         
         if let refreshToken = result.refreshToken {
-            UserDefaults.standard.setValue(refreshToken, forKey: "refreshToken")
+            KeychainWrapper.standard.set(refreshToken, forKey: "refreshToken")
         }
+
         UserDefaults.standard.setValue(Date().addingTimeInterval(TimeInterval(result.expiresIn)), forKey: "expiresIn")
     }
-    
 }

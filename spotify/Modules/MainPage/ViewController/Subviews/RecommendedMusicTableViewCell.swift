@@ -7,8 +7,9 @@
 
 import UIKit
 import SnapKit
+import SkeletonView
 
-class RecommendedMusicTableViewCell: UITableViewCell {
+class RecommendedMusicTableViewCell: UICollectionViewCell {
     //MARK: Properties
     private enum Constraints {
         static let imageSize: CGFloat = 48
@@ -22,6 +23,7 @@ class RecommendedMusicTableViewCell: UITableViewCell {
         let image = UIImageView()
         image.layer.cornerRadius = Constraints.imageCornerRadius
         image.contentMode = .scaleAspectFill
+        image.isSkeletonable = true
         return image
     }()
     
@@ -31,14 +33,17 @@ class RecommendedMusicTableViewCell: UITableViewCell {
         stack.distribution = .fillEqually
         stack.axis = .vertical
         stack.alignment = .fill
+        stack.isSkeletonable = true
         return stack
     }()
     
     private var title: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
+        label.numberOfLines = 1
         label.textAlignment = .left
         label.textColor = .white
+        label.isSkeletonable = true
         return label
     }()
     
@@ -47,6 +52,7 @@ class RecommendedMusicTableViewCell: UITableViewCell {
         label.font = UIFont.systemFont(ofSize: 13)
         label.textAlignment = .left
         label.textColor = .white
+        label.isSkeletonable = true
         return label
     }()
     
@@ -58,19 +64,18 @@ class RecommendedMusicTableViewCell: UITableViewCell {
     }()
     
     //MARK: Lifecycle
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setupViews()
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
     }
     
     //MARK: Methods
-    func configure(data: RecommendedMusicDataModel?){
+    func сonfigure(data: RecommendedMusicDataModel?){
         guard let data else {return}
-        self.musicImage.image = data.image
         self.title.text = data.title
         if let subTitle = data.subTitle {
             self.subTitle.text = subTitle
@@ -78,11 +83,14 @@ class RecommendedMusicTableViewCell: UITableViewCell {
         else {
             subTitle.isHidden = true
         }
+        let url = URL(string: data.imageURL)
+        self.musicImage.kf.setImage(with: url)
+        self.musicImage.layer.cornerRadius = Constraints.imageCornerRadius
     }
     
     private func setupViews() {
+        isSkeletonable = true
         contentView.backgroundColor = .black
-        selectionStyle = .none
         [title, subTitle].forEach {
             titlesStackView.addArrangedSubview($0)
         }
@@ -96,6 +104,7 @@ class RecommendedMusicTableViewCell: UITableViewCell {
         }
         titlesStackView.snp.makeConstraints { make in
             make.left.equalTo(musicImage.snp.right).offset(12)
+            make.right.equalToSuperview().inset(36)
             make.top.bottom.equalTo(musicImage)
         }
         rightView.snp.makeConstraints { make in
@@ -103,5 +112,13 @@ class RecommendedMusicTableViewCell: UITableViewCell {
             make.centerY.equalToSuperview()
             make.size.equalTo(Constraints.rightViewSize)
         }
+    }
+    
+    func startSkeleton(){
+        self.showAnimatedGradientSkeleton()
+    }
+    
+    func stopSkeletion(){
+        self.hideSkeleton()
     }
 }

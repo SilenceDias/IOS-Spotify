@@ -1,26 +1,38 @@
 PODS:
   - Alamofire (5.8.1)
+  - Kingfisher (7.10.1)
   - Moya (15.0.0):
     - Moya/Core (= 15.0.0)
   - Moya/Core (15.0.0):
     - Alamofire (~> 5.0)
+  - SkeletonView (1.30.4)
   - SnapKit (5.0.1)
+  - SwiftKeychainWrapper (4.0.1)
 
 DEPENDENCIES:
+  - Kingfisher (~> 7.0)
   - Moya (~> 15.0)
+  - SkeletonView
   - SnapKit (~> 5.0.0)
+  - SwiftKeychainWrapper
 
 SPEC REPOS:
   trunk:
     - Alamofire
+    - Kingfisher
     - Moya
+    - SkeletonView
     - SnapKit
+    - SwiftKeychainWrapper
 
 SPEC CHECKSUMS:
   Alamofire: 3ca42e259043ee0dc5c0cdd76c4bc568b8e42af7
+  Kingfisher: bc5abe80a8e0144537ef1dd5a0b2621b04f7f439
   Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
+  SkeletonView: 5a050f6411e697abd4cda0a8d767013399dccd69
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
+  SwiftKeychainWrapper: 807ba1d63c33a7d0613288512399cd1eda1e470c
 
-PODFILE CHECKSUM: 0886700a2c98d84d0682d3465e2c06b32519a228
+PODFILE CHECKSUM: bcc06205c29424d8247b57b414d0f6d730b9346b
 
 COCOAPODS: 1.14.3

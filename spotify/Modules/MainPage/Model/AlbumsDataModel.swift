@@ -8,6 +8,6 @@
 import UIKit
 
 struct AlbumsDataModel {
-    let image: UIImage
+    let imageURL: String
     let title: String
 }

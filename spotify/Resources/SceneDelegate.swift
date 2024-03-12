@@ -17,6 +17,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         
         if AuthManager.shared.isSignedIn {
+            AuthManager.shared.refreshAccessToken()
+            
             let tabBarController = TabBarViewController()
             window?.rootViewController = tabBarController
         }
@@ -28,25 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window?.rootViewController = navigationController
         }
         window?.makeKeyAndVisible()
-        
-        let refreshToken = UserDefaults.standard.string(forKey: "refreshToken") ?? ""
-        
-        AuthManager.shared.refreshAccessToken(token: refreshToken) { [weak self] result in
-            switch result {
-            case .success:
-                DispatchQueue.main.async {
-                    let alert = UIAlertController(title: "Token", message: "Token has been refreshed", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .cancel))
-                    self?.window?.rootViewController?.present(alert, animated: true, completion: nil)
-                }
-            case .failure:
-                DispatchQueue.main.async {
-                    let alert = UIAlertController(title: "Token", message: "Error refreshing the token", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: .cancel))
-                    self?.window?.rootViewController?.present(alert, animated: true, completion: nil)
-                }
-            }
-        }
+
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

@@ -11,5 +11,5 @@ import UIKit
 struct RecommendedMusicDataModel {
     let title: String
     let subTitle: String?
-    let image: UIImage
+    let imageURL: String
 }

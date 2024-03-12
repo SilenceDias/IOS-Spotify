@@ -2,95 +2,33 @@
 //  MainViewController.swift
 //  spotify
 //
-//  Created by Диас Мухамедрахимов on 10.02.2024.
+//  Created by Диас Мухамедрахимов on 02.03.2024.
 //
 
 import UIKit
+import SkeletonView
 
-class MainViewController: UIViewController {
+class MainViewController: BaseViewController {
     //MARK: Properties
+    
     var viewModel: MainViewModel?
     
-    //MARK: UI Components
-    private var scrollView: UIScrollView = {
-        let scroll = UIScrollView()
-        scroll.showsVerticalScrollIndicator = false
-        scroll.showsHorizontalScrollIndicator = false
-        scroll.contentInset = .zero
-        return scroll
+    private lazy var collectionView: UICollectionView = {
+        let layout = UICollectionViewCompositionalLayout { sectionIndex, _ ->
+            NSCollectionLayoutSection? in
+            self.createCollectionLayout(section: sectionIndex)
+        }
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.delegate = self
+        collection.dataSource = self
+        collection.register(PlaylistsCollectionViewCell.self, forCellWithReuseIdentifier: "PlaylistsCollectionViewCell")
+        collection.register(RecommendedMusicTableViewCell.self, forCellWithReuseIdentifier: "RecommendedMusicTableViewCell")
+        collection.register(CollectionViewHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "CollectionViewHeader")
+        collection.backgroundColor = .clear
+        collection.isSkeletonable = true
+        return collection
     }()
-    
-    private var contentView = UIView()
-    
-    private let albumsLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 15)
-        label.textColor = .white
-        label.text = "New Released Albums"
-        label.textAlignment = .left
-        return label
-    }()
-    
-    private let recommendedLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 15)
-        label.textColor = .white
-        label.text = "Recommended"
-        label.textAlignment = .left
-        return label
-    }()
-    
-    private let playlistLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 15)
-        label.textColor = .white
-        label.text = "Featured Playlists"
-        label.textAlignment = .left
-        return label
-    }()
-    
-    private lazy var recommendedTableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .plain)
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(RecommendedMusicTableViewCell.self, forCellReuseIdentifier: "RecommendedMusicTableViewCell")
-        tableView.rowHeight = 64
-        tableView.estimatedRowHeight = 64
-        tableView.separatorStyle = .none
-        tableView.backgroundColor = .clear
-        return tableView
-    }()
-    
-    private lazy var newAlbumsCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 0, right: 8)
-        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        view.backgroundColor = .clear
-        view.showsHorizontalScrollIndicator = false
-        view.register(PlaylistsCollectionViewCell.self, forCellWithReuseIdentifier: "PlaylistsCollectionViewCell")
-        view.allowsSelection = false
-        view.delegate = self
-        view.dataSource = self
-        return view
-    }()
-    
-    private lazy var playlistsCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 0, right: 8)
-        layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        view.backgroundColor = .clear
-        view.showsHorizontalScrollIndicator = false
-        view.register(PlaylistsCollectionViewCell.self, forCellWithReuseIdentifier: "PlaylistsCollectionViewCell")
-        view.allowsSelection = false
-        view.delegate = self
-        view.dataSource = self
-        return view
-    }()
-    
+
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -102,127 +40,242 @@ class MainViewController: UIViewController {
     
     //MARK: Methods
     private func setupViews(){
-        view.addSubview(scrollView)
-        scrollView.addSubview(contentView)
-        
-        scrollView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide)
-            make.leading.trailing.bottom.equalToSuperview()
-        }
-        contentView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-            make.width.equalTo(view.frame.width)
-            make.centerX.equalTo(view.snp.centerX)
-        }
-        [albumsLabel, recommendedLabel, recommendedTableView, newAlbumsCollectionView, playlistLabel, playlistsCollectionView].forEach {
-            contentView.addSubview($0)
-        }
-        albumsLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().inset(14)
-            make.left.right.equalToSuperview().inset(16)
-        }
-        newAlbumsCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(albumsLabel.snp.bottom).inset(8)
-            make.height.equalTo(220)
+        view.addSubview(collectionView)
+        navigationItem.setBackBarItem()
+        title = "Home"
+        collectionView.snp.makeConstraints { make in
+            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
             make.left.right.equalToSuperview()
-        }
-        playlistLabel.snp.makeConstraints { make in
-            make.top.equalTo(newAlbumsCollectionView.snp.bottom).offset(16)
-            make.left.right.equalToSuperview().inset(16)
-        }
-        playlistsCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(playlistLabel.snp.bottom).inset(8)
-            make.height.equalTo(220)
-            make.left.right.equalToSuperview()
-        }
-        recommendedLabel.snp.makeConstraints { make in
-            make.top.equalTo(playlistsCollectionView.snp.bottom).offset(16)
-            make.left.right.equalToSuperview().inset(16)
-        }
-        recommendedTableView.snp.makeConstraints { make in
-            make.top.equalTo(recommendedLabel.snp.bottom).offset(8)
-            make.height.greaterThanOrEqualTo(viewModel?.numberOfCellsTableView ?? 3 * 64)
-            make.left.right.bottom.equalToSuperview()
         }
     }
     
     private func setupViewModel(){
         viewModel = MainViewModel()
-        viewModel?.loadRecomendedMusics(comletion: {
-            self.recommendedTableView.reloadData()
+// ы
+        let group = DispatchGroup()
+        viewModel?.didLoad()
+        
+        group.enter()
+        viewModel?.loadAlbums(comletion: { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                self?.collectionView.reloadData()
+                group.leave()
+            }
         })
-        viewModel?.loadAlbums(comletion: {
-            self.newAlbumsCollectionView.reloadData()
+        
+        group.enter()
+        viewModel?.loadRecomendedMusics(comletion: { [weak self]  in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                self?.collectionView.reloadData()
+                group.leave()
+            }
         })
-        viewModel?.loadPlaylists(comletion: {
-            self.playlistsCollectionView.reloadData()
+        
+        group.enter()
+        viewModel?.loadPlaylists(comletion: { [weak self]  in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                self?.collectionView.reloadData()
+                group.leave()
+            }
         })
-    }
+        
+//        group.notify(queue: .main) { [weak self] in
+//            self?.collectionView.hideSkeleton()
+//        }
+}
     
     private func createNavBar(){
-        navigationController?.navigationBar.tintColor = .white
-        let navigationBarAppearance = UINavigationBarAppearance()
-        navigationBarAppearance.backgroundColor = .black
-        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
-        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
-        navigationController?.navigationBar.compactAppearance = navigationBarAppearance
-        let label = UILabel()
-        label.text = "Home"
-        label.font = UIFont.systemFont(ofSize: 30, weight: .bold)
-        label.textColor = .white
-        let settingImage = UIImageView()
-        settingImage.image = UIImage(systemName: "gearshape")
-        settingImage.snp.makeConstraints { make in
-            make.size.equalTo(24)
-        }
-        navigationItem.leftBarButtonItem = UIBarButtonItem.init(customView: label)
-        navigationItem.rightBarButtonItem = UIBarButtonItem.init(customView: settingImage)
-    }
-}
-
-//MARK: UITableViewDelegate, UITableViewDataSource
-extension MainViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel?.numberOfCellsTableView ?? 1
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "gearshape"),
+            style: .done,
+            target: self,
+            action: #selector(didTapSettings)
+        )
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = recommendedTableView.dequeueReusableCell(withIdentifier: "RecommendedMusicTableViewCell", for: indexPath) as! RecommendedMusicTableViewCell
-        let data = viewModel?.getCellOfTableViewModel(at: indexPath)
-        cell.configure(data: data)
-        return cell
+    @objc
+    private func didTapSettings() {
+        let controller = SettingsViewController()
+        controller.title = "Settings"
+        controller.hidesBottomBarWhenPushed = true
+        controller.navigationItem.backButtonTitle = " "
+        controller.navigationController?.navigationBar.prefersLargeTitles = true
+        controller.navigationItem.largeTitleDisplayMode = .always
+        navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    private func createCollectionLayout(section: Int) -> NSCollectionLayoutSection {
+        switch section{
+        case 0:
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+            
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            item.contentInsets = .init(top: 2, leading: 2, bottom: 2, trailing: 2)
+            
+            let horizontalGroup = NSCollectionLayoutGroup.horizontal(
+                layoutSize: NSCollectionLayoutSize(
+                    widthDimension: .absolute(168),
+                    heightDimension: .absolute(220)
+                ),
+                subitem: item,
+                count: 1
+            )
+            
+            let section = NSCollectionLayoutSection(group: horizontalGroup)
+            section.orthogonalScrollingBehavior = .continuous
+            section.contentInsets = .init(top: 8, leading: 16, bottom: 4, trailing: 16)
+            section.boundarySupplementaryItems = [.init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(60)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)]
+            return section
+        case 1:
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+            
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            item.contentInsets = .init(top: 2, leading: 2, bottom: 2, trailing: 2)
+            
+            let horizontalGroup = NSCollectionLayoutGroup.horizontal(
+                layoutSize: NSCollectionLayoutSize(
+                    widthDimension: .absolute(168),
+                    heightDimension: .absolute(220)
+                ),
+                subitem: item,
+                count: 1
+            )
+            
+            let section = NSCollectionLayoutSection(group: horizontalGroup)
+            section.orthogonalScrollingBehavior = .continuous
+            section.contentInsets = .init(top: 4, leading: 16, bottom: 4, trailing: 16)
+            section.boundarySupplementaryItems = [.init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(60)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)]
+            return section
+        case 2:
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(70))
+            
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            item.contentInsets = .init(top: 2, leading: 2, bottom: 2, trailing: 2)
+            
+            let verticalGroup = NSCollectionLayoutGroup.vertical(
+                layoutSize: NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .absolute(64)
+                ),
+                subitem: item,
+                count: 1
+            )
+            
+            let section = NSCollectionLayoutSection(group: verticalGroup)
+            section.contentInsets = .init(top: 4, leading: 16, bottom: 16, trailing: 16)
+            section.boundarySupplementaryItems = [.init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(60)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)]
+            return section
+        default:
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(70))
+            
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            item.contentInsets = .init(top: 2, leading: 2, bottom: 2, trailing: 2)
+            
+            let verticalGroup = NSCollectionLayoutGroup.vertical(
+                layoutSize: NSCollectionLayoutSize(
+                    widthDimension: .fractionalWidth(1.0),
+                    heightDimension: .absolute(64)
+                ),
+                subitem: item,
+                count: 1
+            )
+            
+            let section = NSCollectionLayoutSection(group: verticalGroup)
+            return section
+        }
+    }
+    
+    private func headerItem() -> NSCollectionLayoutBoundarySupplementaryItem{
+        .init(layoutSize: .init(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
     }
 }
 
-//MARK: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout
-extension MainViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+//MARK: Extensions
+extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return viewModel?.numberOfSections ?? 3
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if collectionView == self.newAlbumsCollectionView{
-            return viewModel?.numberOfCellsAlbums ?? 1
-        }
-        else {
-            return viewModel?.numberOfCellsPlaylists ?? 1
+        let type = viewModel?.getSectionViewModel(at: section)
+        switch type {
+        case .newRelease(let dataModel):
+            return dataModel.count
+        case .playlist(let dataModel):
+            return dataModel.count
+        case .recommended(let dataModel):
+            return dataModel.count
+        default:
+            return 1
         }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if collectionView == self.newAlbumsCollectionView{
-            let cell = newAlbumsCollectionView.dequeueReusableCell(withReuseIdentifier: "PlaylistsCollectionViewCell", for: indexPath) as!
+        let type = viewModel?.getSectionViewModel(at: indexPath.section)
+        switch type {
+        case .newRelease(let datamodel):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PlaylistsCollectionViewCell", for: indexPath) as!
                 PlaylistsCollectionViewCell
-            let data = viewModel?.getCellOfAlbumsViewModel(at: indexPath)
-            cell.configure(data: data)
+            cell.сonfigure(data: datamodel[indexPath.row])
+            
+            
             return cell
-        }
-        else {
-            let cell = newAlbumsCollectionView.dequeueReusableCell(withReuseIdentifier: "PlaylistsCollectionViewCell", for: indexPath) as!
+        case .playlist(let datamodel):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PlaylistsCollectionViewCell", for: indexPath) as!
                 PlaylistsCollectionViewCell
-            let data = viewModel?.getCellOfPlaylistsViewModel(at: indexPath)
-            cell.configure(data: data)
+            cell.сonfigure(data: datamodel[indexPath.row])
+            
+            
             return cell
+        case .recommended(let datamodel):
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "RecommendedMusicTableViewCell", for: indexPath) as! RecommendedMusicTableViewCell
+            cell.сonfigure(data: datamodel[indexPath.row])
+            
+            return cell
+        default:
+            return UICollectionViewCell()
         }
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 170, height: 220)
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "CollectionViewHeader", for: indexPath) as! CollectionViewHeader
+        
+        header.configure(with: viewModel?.getHeadersOfSection(with: indexPath.section) ?? "")
+        
+        return header
+    }
+}
+
+extension MainViewController: SkeletonCollectionViewDelegate, SkeletonCollectionViewDataSource {
+    func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> SkeletonView.ReusableCellIdentifier {
+        let type = viewModel?.getSectionViewModel(at: indexPath.section)
+        switch type {
+        case .newRelease:
+            return "PlaylistsCollectionViewCell"
+        case .playlist:
+            return "PlaylistsCollectionViewCell"
+        case .recommended:
+            return "RecommendedMusicTableViewCell"
+        default:
+            return ""
+        }
+    }
+    
+    func numSections(in collectionSkeletonView: UICollectionView) -> Int {
+        return viewModel?.numberOfSections ?? 1
+    }
+    
+    func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        let type = viewModel?.getSectionViewModel(at: section)
+        switch type {
+        case .newRelease:
+            return 3
+        case .playlist:
+            return 3
+        case .recommended:
+            return 4
+        default:
+            return 1
+        }
     }
 }

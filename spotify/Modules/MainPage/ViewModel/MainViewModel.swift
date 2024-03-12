@@ -6,12 +6,24 @@
 //
 
 import UIKit
+import Kingfisher
 
 class MainViewModel {
     //MARK: Properties
     private lazy var items: [RecommendedMusicDataModel] = []
     private lazy var albums: [AlbumsDataModel] = []
     private lazy var playlists: [AlbumsDataModel] = []
+    private let headers = ["New Released Albums", "Featured Playlists", "Recommended"]
+    
+    private var sections = [HomeSectionType]()
+    
+    var numberOfSections: Int {
+        return sections.count
+    }
+    
+    func getSectionViewModel(at section: Int) -> HomeSectionType {
+        return sections[section]
+    }
     
     var numberOfCellsTableView: Int {
         return items.count
@@ -26,69 +38,81 @@ class MainViewModel {
     }
     
     //MARK: Methods
-    func getCellOfTableViewModel(at indexPath: IndexPath) -> RecommendedMusicDataModel{
-        return items[indexPath.row]
+    
+    func didLoad(){
+        sections.append(.newRelease(datamodel: []))
+        sections.append(.playlist(datamodel: []))
+        sections.append(.recommended(datamodel: []))
     }
     
-    func getCellOfAlbumsViewModel(at indexPath: IndexPath) -> AlbumsDataModel{
-        return albums[indexPath.row]
-    }
-    
-    func getCellOfPlaylistsViewModel(at indexPath: IndexPath) -> AlbumsDataModel{
-        return playlists[indexPath.row]
-    }
-    
-    func loadRecomendedMusics(comletion: () -> ()) {
-        let musics: [RecommendedMusicDataModel] = [
-            .init(
-                title: "Cozy Coffeehouse",
-                subTitle: nil,
-                image: UIImage(named: "music1") ?? UIImage()
-            ),
-            .init(
-                title: "Cozy",
-                subTitle: "Profile",
-                image: UIImage(named: "music2") ?? UIImage()
-            ),
-            .init(
-                title: "cozy clouds",
-                subTitle: nil,
-                image: UIImage(named: "music3") ?? UIImage()
-            )
-        ]
+    func loadRecomendedMusics(comletion: () -> () ) {
+        MainPageManager.shared.getRecomendedGenres { genres in
+            var seeds = Set<String>()
+            while seeds.count < 5 {
+                if let random = genres.randomElement() {
+                    seeds.insert(random)
+                }
+            }
+            let genresSeed = seeds.joined(separator: ",")
+            MainPageManager.shared.getRecomendations(genres: genresSeed) { [weak self] items in
+                if let index = self?.sections.firstIndex(where: {
+                    if case .recommended = $0{
+                        return true
+                    } else {
+                        return false
+                    }
+                }) {
+                    var tracks: [RecommendedMusicDataModel] = []
+                    items.forEach {
+                        tracks.append(.init(title: $0.album.name ?? "No name", subTitle: $0.artists.first?.name ?? "", imageURL: $0.album.images?.first?.url ?? "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png"))
+                    }
+                    self?.sections[index] = .recommended(datamodel: tracks)
+                }
+            }
+        }
         
-        self.items = musics
         comletion()
     }
     
-    func loadAlbums(comletion: () -> ()) {
-        let albums: [AlbumsDataModel] = [
-            .init(
-                image: UIImage(named: "vultures1_album") ?? UIImage(), title: "Kanye West: Vultures 1"
-            ),
-            .init(
-                image: UIImage(named: "i_am_music_album") ?? UIImage(), title: "Playboi Carti: I am Music"
-            ),
-            .init(
-                image: UIImage(named: "utopia_album") ?? UIImage(), title: "Travis Scott: Utopia"
-            )
-        ]
-        
-        self.albums = albums
+    func loadAlbums(comletion: () -> Void) {
+        MainPageManager.shared.getAlbums { [weak self] items in
+            if let index = self?.sections.firstIndex(where: {
+                if case .newRelease = $0{
+                    return true
+                } else {
+                    return false
+                }
+            }) {
+                var albums: [AlbumsDataModel] = []
+                items.forEach {
+                    albums.append(.init(imageURL: $0.images[0].url, title: $0.name))
+                }
+                self?.sections[index] = .newRelease(datamodel: albums)
+            }
+        }
         comletion()
     }
     
-    func loadPlaylists(comletion: () -> ()) {
-        let playlists: [AlbumsDataModel] = [
-            .init(
-                image: UIImage(named: "playlist1") ?? UIImage(), title: "Indie India"
-            ),
-            .init(
-                image: UIImage(named: "playlist2") ?? UIImage(), title: "RADAR India"
-            )
-        ]
-        
-        self.playlists = playlists
+    func loadPlaylists(comletion: () -> Void) {
+        MainPageManager.shared.getPlaylists { [weak self] items in
+            if let index = self?.sections.firstIndex(where: {
+                if case .playlist = $0{
+                    return true
+                } else {
+                    return false
+                }
+            }) {
+                var playlists: [AlbumsDataModel] = []
+                items.forEach {
+                    playlists.append(.init(imageURL: $0.images?[0].url ?? "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/1665px-No-Image-Placeholder.svg.png", title: $0.name ?? "playlist"))
+                }
+                self?.sections[index] = .playlist(datamodel: playlists)
+            }
+        }
         comletion()
+    }
+    
+    func getHeadersOfSection(with index: Int) -> String {
+        return headers[index]
     }
 }

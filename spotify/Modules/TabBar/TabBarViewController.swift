@@ -48,5 +48,9 @@ class TabBarViewController: UITabBarController {
             items[i].title = titles[i]
             items[i].image = icons[i]
         }
+        
+        allViewControllers.forEach {
+            $0.navigationBar.prefersLargeTitles = true
+        }
     }
 }

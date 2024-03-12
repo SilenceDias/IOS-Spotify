@@ -13,13 +13,10 @@ enum AuthTarget {
     case refresh(refreshToken: String)
 }
 
-extension AuthTarget: TargetType {
-    var baseURL: URL {
-        return URL(string: GlobalConstants.baseURL + "/api")!
-    }
+extension AuthTarget: BaseTarget {
     
     var path: String {
-        return "/token"
+        return "/api/token"
     }
     
     var method: Moya.Method {
@@ -60,6 +57,4 @@ extension AuthTarget: TargetType {
         
         return headers
     }
-    
-    
 }
